@@ -26,6 +26,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.lkl.domain.ReciveMessageRequest;
 import com.lkl.util.WeChatContant;
 import com.qq.weixin.mp.aes.AesException;
 import com.qq.weixin.mp.aes.WXBizMsgCrypt;
@@ -59,11 +60,13 @@ public class WechatController {
 			@RequestParam(required=false) String echostr,
 			HttpServletRequest request,
 			HttpServletResponse response) throws Exception{
-			Object[] obj = parseXML(request);
-			//logger.info(result);
+		   ReciveMessageRequest  message = parseXML(request);
+		   String send =  replyMsg(message);
+		    logger.info("send xml="+send);
 			
 			PrintWriter writer = response.getWriter();
-			writer.write(obj[0].toString());
+			writer.write(send);
+		
 			writer.flush();
 			writer.close();
 	}
@@ -81,8 +84,8 @@ public class WechatController {
 		return xml ;
 	}
 	
-	private Object[] parseXML(HttpServletRequest request) throws IOException, ParserConfigurationException, SAXException{
-		Object[] result = new Object[3];
+	private ReciveMessageRequest parseXML(HttpServletRequest request) throws IOException, ParserConfigurationException, SAXException{
+		ReciveMessageRequest result = new ReciveMessageRequest();
 		
 		String xmltext = getReviceString(request) ;
 		
@@ -107,11 +110,36 @@ public class WechatController {
 		logger.info("Content="+nodelist5.item(0).getTextContent());
 		logger.info("MsgId="+nodelist6.item(0).getTextContent());
 		
-		result[0] = nodelist5.item(0).getTextContent();
-		result[2] = nodelist2.item(0).getTextContent();
+		result.setToUserName(nodelist1.item(0).getTextContent());
+		result.setFromUserName(nodelist2.item(0).getTextContent());
+		result.setCreateTime(nodelist3.item(0).getTextContent());
+		result.setMsgType(nodelist4.item(0).getTextContent());
+		result.setContent(nodelist5.item(0).getTextContent());
+		result.setMsgId(nodelist6.item(0).getTextContent());
+		
 		return result;
 	}
 	
+	private String replyMsg(ReciveMessageRequest message){
+		String result = "<xml> " +
+				"<ToUserName>" +
+						"<![CDATA[" +message.getFromUserName()+"]]>" +
+				"</ToUserName>" +
+				"<FromUserName>" +
+						"<![CDATA[" +message.getToUserName()+"]]>" +
+				"</FromUserName>" +
+				"<CreateTime>" +
+						"<![CDATA[" +message.getCreateTime()+"]]>" +
+				"</CreateTime>" +
+				"<MsgType>" +
+						"<![CDATA[" +message.getMsgType()+"]]>" +
+				"</MsgType>" +
+				"<Content>" +
+					"<![CDATA[" +message.getContent()+"---finish "+"]]>" +
+				"</Content>"+
+		"</xml>";
+		return result ;
+	}
 	
 	private String parseRequest(HttpServletRequest request) throws AesException, IOException{
 		

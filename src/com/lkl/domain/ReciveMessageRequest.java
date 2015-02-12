@@ -11,13 +11,13 @@ public class ReciveMessageRequest {
 	 * 发送方帐号（一个OpenID）
 	 */
 	private String fromUserName ;
-	private Date createTime ;
+	private String createTime ;
 	/**
 	 * 接受消息类型
 	 * @author lkl
 	 *
 	 */
-	private MessageType msgType ;
+	private String msgType ;
 	/**
 	 * 接受消息类型
 	 */
@@ -25,5 +25,43 @@ public class ReciveMessageRequest {
 	/**
 	 * 消息id，64位整型 
 	 */
-	private long msgId ; 
+	private String msgId ;
+	public String getToUserName() {
+		return toUserName;
+	}
+	public void setToUserName(String toUserName) {
+		this.toUserName = toUserName;
+	}
+	public String getFromUserName() {
+		return fromUserName;
+	}
+	public void setFromUserName(String fromUserName) {
+		this.fromUserName = fromUserName;
+	}
+	public String getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+	public String getMsgType() {
+		return msgType;
+	}
+	public void setMsgType(String msgType) {
+		this.msgType = msgType;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public String getMsgId() {
+		return msgId;
+	}
+	public void setMsgId(String msgId) {
+		this.msgId = msgId;
+	} 
+	
+	
 }
